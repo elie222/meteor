@@ -128,10 +128,12 @@ babelHelpers = {
         // in browsers that support accessor properties (all except
         // IE8). In IE8, the superClass can't have accessor properties
         // anyway, so this code is still safe.
-        Object.defineProperty(
-          subClass, k,
-          Object.getOwnPropertyDescriptor(superClass, k)
-        );
+        var descriptor = Object.getOwnPropertyDescriptor(superClass, k);
+        try {
+          Object.defineProperty(subClass, k, descriptor);
+        } catch (e) {
+          subClass[k] = superClass[k];
+        }
       });
     }
   },
